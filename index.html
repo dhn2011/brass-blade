@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BRASS & BLADE — барбершоп в Ташкенте</title>
+<meta name="description" content="BRASS & BLADE — мужской барбершоп в Ташкенте: стрижки, фейды, борода, королевское бритьё. Запись онлайн в Telegram.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Playfair+Display:ital,wght@1,500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0a09;
+    --surface:#151311;
+    --surface-2:#1d1a17;
+    --ink:#f2ede4;
+    --muted:#9a9186;
+    --line:rgba(242,237,228,.12);
+    --brass:#c9a36a;
+    --brass-2:#e2c792;
+    --radius:20px;
+    --ease:cubic-bezier(.22,1,.36,1);
+    --display:'Oswald',Impact,sans-serif;
+    --serif:'Playfair Display',Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  html.lenis,html.lenis body{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto!important}
+  body{font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;overflow-x:hidden}
+  body.loading{overflow:hidden}
+  /* film grain */
+  body::after{content:"";position:fixed;inset:-50%;z-index:100;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(4) infinite}
+  @keyframes grain{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+  img,video{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+  .container{width:min(1320px,100% - 32px);margin-inline:auto}
+  .eyebrow{font-family:var(--display);text-transform:uppercase;letter-spacing:.22em;font-size:13px;color:var(--brass);display:inline-flex;align-items:center;gap:12px}
+  .eyebrow::before{content:"";width:28px;height:1px;background:var(--brass)}
+  .h2{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:clamp(40px,7vw,104px);line-height:.92;letter-spacing:-.01em}
+  .h2 em{font-family:var(--serif);font-style:italic;text-transform:none;color:var(--brass);font-weight:500;letter-spacing:0}
+  .lead{color:var(--muted);font-size:clamp(16px,1.3vw,18px);max-width:520px}
+  .section{padding:clamp(90px,12vw,170px) 0;position:relative}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;gap:14px;height:58px;padding:0 10px 0 28px;border-radius:999px;font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:15px;transition:transform .4s var(--ease),background .3s,color .3s,box-shadow .4s var(--ease)}
+  .btn .ic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;transition:transform .5s var(--ease)}
+  .btn:hover .ic{transform:rotate(-45deg)}
+  .btn-brass{background:var(--brass);color:#120f0b}
+  .btn-brass .ic{background:#120f0b;color:var(--brass)}
+  .btn-brass:hover{background:var(--brass-2);box-shadow:0 18px 40px -16px rgba(201,163,106,.6);transform:translateY(-2px)}
+  .btn-ghost{border:1px solid rgba(242,237,228,.3);padding:0 28px}
+  .btn-ghost:hover{border-color:var(--brass);color:var(--brass)}
+
+  /* loader */
+  .loader{position:fixed;inset:0;z-index:90;background:#070605;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+  .loader .mark{font-family:var(--display);font-size:clamp(28px,4vw,44px);letter-spacing:.3em;text-transform:uppercase;overflow:hidden}
+  .loader .mark span{display:inline-block}
+  .loader .count{font-family:var(--display);color:var(--brass);font-size:14px;letter-spacing:.3em}
+  .loader .bar{width:160px;height:1px;background:var(--line);overflow:hidden}
+  .loader .bar i{display:block;height:100%;width:100%;background:var(--brass);transform:scaleX(0);transform-origin:left}
+
+  /* header */
+  .header{position:fixed;inset:0 0 auto;z-index:50;transition:transform .5s var(--ease),background .4s}
+  .header.scrolled{background:rgba(11,10,9,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .header.hidden{transform:translateY(-100%)}
+  .header .container{display:flex;align-items:center;justify-content:space-between;height:84px}
+  .logo{display:flex;align-items:center;gap:12px;font-family:var(--display);font-size:20px;letter-spacing:.18em;text-transform:uppercase}
+  .logo b{color:var(--brass);font-weight:400}
+  .logo svg{width:28px;height:28px;color:var(--brass)}
+  .nav{display:flex;gap:38px;font-family:var(--display);text-transform:uppercase;letter-spacing:.14em;font-size:14px;color:rgba(242,237,228,.75)}
+  .nav a{position:relative;transition:color .3s}
+  .nav a::after{content:"";position:absolute;left:0;bottom:-6px;width:100%;height:1px;background:var(--brass);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+  .nav a:hover{color:var(--ink)}
+  .nav a:hover::after{transform:scaleX(1);transform-origin:left}
+  .header .btn{height:46px;font-size:13px;padding-left:20px}
+  .header .btn .ic{width:32px;height:32px}
+  .burger{display:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);place-items:center}
+
+  /* hero */
+  .hero{position:relative;height:100svh;min-height:620px;overflow:hidden}
+  .hero-media{position:absolute;inset:0}
+  .hero-media video{width:100%;height:100%;object-fit:cover;will-change:transform}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,10,9,.55) 0%,rgba(11,10,9,.25) 40%,rgba(11,10,9,.92) 100%)}
+  .hero-content{position:absolute;z-index:2;inset:auto 0 0;padding-bottom:clamp(36px,6vh,70px)}
+  .hero h1{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:clamp(64px,13.5vw,220px);line-height:.86;letter-spacing:-.02em}
+  .hero h1 .ln{display:block;overflow:hidden}
+  .hero h1 .ln > span{display:inline-block}
+  .hero h1 em{font-family:var(--serif);font-style:italic;text-transform:none;color:var(--brass);font-size:.62em;letter-spacing:0;font-weight:500}
+  .hero-row{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;margin-top:34px;flex-wrap:wrap}
+  .hero-row .lead{color:rgba(242,237,228,.78);max-width:420px}
+  .hero-meta{display:flex;gap:34px;font-size:14px;color:rgba(242,237,228,.7)}
+  .hero-meta b{display:block;font-family:var(--display);font-weight:500;font-size:28px;color:var(--ink);letter-spacing:.02em}
+  .scroll-cue{position:absolute;z-index:2;right:clamp(16px,3vw,40px);top:50%;transform:translateY(-50%) rotate(90deg);transform-origin:right center;font-family:var(--display);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:rgba(242,237,228,.6);display:flex;align-items:center;gap:12px}
+  .scroll-cue i{width:60px;height:1px;background:rgba(242,237,228,.25);position:relative;overflow:hidden}
+  .scroll-cue i::after{content:"";position:absolute;inset:0;background:var(--brass);animation:cue 2s var(--ease) infinite}
+  @keyframes cue{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+  /* marquee */
+  .mq{padding:40px 0;border-block:1px solid var(--line);overflow:hidden;display:flex;flex-direction:column;gap:8px}
+  .mq-track{display:flex;width:max-content;white-space:nowrap;will-change:transform}
+  .mq-track span{font-family:var(--display);text-transform:uppercase;font-size:clamp(46px,8vw,120px);line-height:1;padding-right:.4em;font-weight:500}
+  .mq-track.outline span{color:transparent;-webkit-text-stroke:1px rgba(242,237,228,.35)}
+  .mq-track .star{color:var(--brass);-webkit-text-stroke:0}
+
+  /* about */
+  .about{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(40px,6vw,100px);align-items:start}
+  .about-text{font-family:var(--display);text-transform:uppercase;font-size:clamp(28px,3.4vw,52px);line-height:1.08;font-weight:400;margin-top:28px}
+  .about-text .w{opacity:.15}
+  .about-text em{font-family:var(--serif);text-transform:none;font-style:italic;color:var(--brass)}
+  .about-imgs{position:relative;height:clamp(460px,52vw,700px)}
+  .about-imgs .im{position:absolute;overflow:hidden;border-radius:var(--radius)}
+  .about-imgs .im img{width:100%;height:118%;object-fit:cover;position:relative;top:-9%}
+  .about-imgs .a1{width:78%;height:72%;right:0;top:0}
+  .about-imgs .a2{width:52%;height:46%;left:0;bottom:0;border:6px solid var(--bg)}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:clamp(60px,8vw,110px);border-top:1px solid var(--line)}
+  .stat{padding:30px 24px 0 0}
+  .stat + .stat{padding-left:24px;border-left:1px solid var(--line)}
+  .stat .n{font-family:var(--display);font-weight:500;font-size:clamp(46px,5.4vw,84px);line-height:1}
+  .stat .n sup{color:var(--brass);font-size:.45em;vertical-align:top}
+  .stat p{color:var(--muted);margin-top:10px;font-size:15px}
+
+  /* services */
+  .svc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:56px}
+  .svc-list{border-top:1px solid var(--line)}
+  .svc{display:grid;grid-template-columns:70px 1fr auto auto;align-items:center;gap:24px;padding:30px 0;border-bottom:1px solid var(--line);position:relative;cursor:pointer}
+  .svc::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(201,163,106,.08),transparent 70%);opacity:0;transition:opacity .4s}
+  .svc:hover::before{opacity:1}
+  .svc .no{font-family:var(--display);color:var(--brass);font-size:15px;letter-spacing:.1em}
+  .svc h3{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:clamp(24px,3.2vw,46px);line-height:1;transition:transform .5s var(--ease),color .3s}
+  .svc:hover h3{transform:translateX(14px);color:var(--brass-2)}
+  .svc h3 small{display:block;font-family:'Manrope',sans-serif;text-transform:none;font-size:15px;color:var(--muted);font-weight:400;margin-top:10px;letter-spacing:0}
+  .svc .dur{color:var(--muted);font-size:15px;white-space:nowrap}
+  .svc .pr{font-family:var(--display);font-size:clamp(20px,2vw,28px);white-space:nowrap;min-width:180px;text-align:right}
+  .svc .thumb{display:none}
+  .svc-preview{position:fixed;left:0;top:0;z-index:40;width:300px;height:380px;border-radius:16px;overflow:hidden;pointer-events:none;opacity:0;visibility:hidden;transform:translate(-50%,-50%) scale(.6) rotate(-6deg)}
+  .svc-preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+  /* video reveal */
+  .vr{height:100vh;position:relative;overflow:hidden}
+  .vr-box{position:absolute;inset:0;clip-path:inset(18% 30% 18% 30% round 24px);will-change:clip-path}
+  .vr-box video{width:100%;height:100%;object-fit:cover;transform:scale(1.25)}
+  .vr-box::after{content:"";position:absolute;inset:0;background:rgba(11,10,9,.45)}
+  .vr-text{position:absolute;z-index:2;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;padding:0 16px}
+  .vr-text h2{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:clamp(46px,9vw,150px);line-height:.9}
+  .vr-text h2 em{font-family:var(--serif);font-style:italic;text-transform:none;color:var(--brass)}
+  .vr-text p{color:rgba(242,237,228,.8);margin-top:18px;max-width:460px}
+
+  /* horizontal gallery */
+  .hs{position:relative;overflow:hidden}
+  .hs-inner{padding:clamp(90px,10vw,140px) 0}
+  .hs-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:50px}
+  .hs-track{display:flex;gap:20px;padding:0 max(16px,(100vw - 1320px)/2);width:max-content;will-change:transform}
+  .work{width:clamp(260px,26vw,400px);flex:none}
+  .work .ph{aspect-ratio:3/4;overflow:hidden;border-radius:var(--radius);background:var(--surface)}
+  .work .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+  .work:hover .ph img{transform:scale(1.06)}
+  .work .cap{display:flex;justify-content:space-between;margin-top:14px;font-family:var(--display);text-transform:uppercase;letter-spacing:.1em;font-size:14px}
+  .work .cap span:last-child{color:var(--muted)}
+  .work.wide{width:clamp(320px,38vw,580px)}
+  .work.wide .ph{aspect-ratio:4/3.7}
+
+  /* masters */
+  .masters{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
+  .master .ph{aspect-ratio:3/4.1;overflow:hidden;border-radius:var(--radius);background:var(--surface);position:relative}
+  .master .ph img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .8s var(--ease),transform 1.2s var(--ease)}
+  .master:hover .ph img{filter:grayscale(0);transform:scale(1.05)}
+  .master .ph .ig{position:absolute;left:14px;bottom:14px;background:rgba(11,10,9,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px 12px;border-radius:999px;font-size:13px;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .5s var(--ease)}
+  .master:hover .ph .ig{opacity:1;transform:none}
+  .master h3{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:24px;margin-top:18px;letter-spacing:.02em}
+  .master p{color:var(--muted);font-size:14px;margin-top:2px}
+  .master .lvl{display:inline-block;margin-top:10px;font-size:12px;color:var(--brass);border:1px solid rgba(201,163,106,.4);padding:4px 12px;border-radius:999px;font-family:var(--display);letter-spacing:.12em;text-transform:uppercase}
+
+  /* reviews */
+  .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+  .review{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;display:flex;flex-direction:column;justify-content:space-between;min-height:300px;transition:border-color .4s,transform .5s var(--ease)}
+  .review:hover{border-color:rgba(201,163,106,.45);transform:translateY(-6px)}
+  .review .q{font-family:var(--serif);font-style:italic;color:var(--brass);font-size:60px;line-height:.5}
+  .review p{font-size:17px;margin:18px 0 26px}
+  .review .who{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+  .review .who b{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.08em;font-size:16px}
+  .review .stars{color:var(--brass);letter-spacing:3px}
+
+  /* booking */
+  .book{position:relative;border-radius:calc(var(--radius) + 8px);overflow:hidden;min-height:620px;display:flex;align-items:flex-end}
+  .book video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .book::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,10,9,.92) 0%,rgba(11,10,9,.6) 55%,rgba(11,10,9,.25) 100%)}
+  .book-in{position:relative;z-index:2;padding:clamp(32px,6vw,80px);max-width:760px}
+  .book-in .lead{color:rgba(242,237,228,.8);margin:22px 0 36px}
+  .book-actions{display:flex;flex-wrap:wrap;gap:12px}
+  .steps{display:flex;gap:26px;margin-top:40px;color:rgba(242,237,228,.7);font-size:14px;flex-wrap:wrap}
+  .steps span b{font-family:var(--display);color:var(--brass);margin-right:8px}
+
+  /* footer */
+  footer{padding:90px 0 40px;border-top:1px solid var(--line)}
+  .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+  .foot h4{font-family:var(--display);font-weight:400;text-transform:uppercase;letter-spacing:.2em;font-size:13px;color:var(--brass);margin-bottom:16px}
+  .foot p,.foot a{display:block;font-size:15px;margin-bottom:8px;color:rgba(242,237,228,.85)}
+  .foot a:hover{color:var(--brass)}
+  .foot-big{font-family:var(--display);font-weight:500;text-transform:uppercase;font-size:clamp(56px,14.5vw,250px);line-height:.85;margin-top:80px;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(242,237,228,.18);overflow:hidden}
+  .foot-big b{color:transparent;-webkit-text-stroke:1px var(--brass);font-weight:500}
+  .foot-bottom{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:30px;padding-top:24px;border-top:1px solid var(--line)}
+
+  .m-cta{display:none}
+  .m-menu{position:fixed;inset:0;z-index:60;background:#070605;padding:110px 24px 40px;display:flex;flex-direction:column;clip-path:inset(0 0 100% 0);transition:clip-path .8s var(--ease);visibility:hidden}
+  .m-menu.open{clip-path:inset(0 0 0 0);visibility:visible}
+  .m-menu a{font-family:var(--display);text-transform:uppercase;font-size:42px;line-height:1.25;border-bottom:1px solid var(--line);padding:8px 0}
+  .m-close{position:absolute;right:16px;top:19px;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);font-size:24px}
+
+  @media (max-width:1024px){
+    .nav{display:none}
+    .about,.reviews{grid-template-columns:1fr}
+    .masters{grid-template-columns:repeat(2,1fr)}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(3){border-left:0;padding-left:0}
+    .foot{grid-template-columns:1fr 1fr}
+    .svc{grid-template-columns:50px 1fr auto}
+    .svc .dur{display:none}
+  }
+  @media (max-width:640px){
+    .header .btn{display:none}
+    .burger{display:grid}
+    .scroll-cue{display:none}
+    .hero-meta{gap:22px}
+    .hero-meta b{font-size:22px}
+    .svc{grid-template-columns:64px 1fr;gap:16px;padding:22px 0}
+    .svc .no{display:none}
+    .svc .thumb{display:block;width:64px;height:64px;border-radius:12px;object-fit:cover}
+    .svc .pr{grid-column:2;text-align:left;min-width:0;font-size:20px;color:var(--brass)}
+    .svc h3 small{font-size:13px;margin-top:6px}
+    .hs-track{overflow-x:auto;width:auto;scroll-snap-type:x mandatory;padding-bottom:6px;scrollbar-width:none}
+    .hs-track::-webkit-scrollbar{display:none}
+    .work,.work.wide{width:78vw;scroll-snap-align:center}
+    .work.wide .ph{aspect-ratio:3/4}
+    .vr{height:80vh}
+    .stat{padding:24px 12px 0 0}
+    .stat + .stat{padding-left:12px}
+    .foot{grid-template-columns:1fr}
+    .book{min-height:560px}
+    .m-cta{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:45;height:58px;border-radius:999px;background:var(--brass);color:#120f0b;align-items:center;justify-content:center;gap:10px;font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;box-shadow:0 16px 36px -12px rgba(0,0,0,.7);transform:translateY(130%);transition:transform .5s var(--ease)}
+    .m-cta.show{transform:none}
+    footer{padding-bottom:100px}
+  }
+</style>
+</head>
+<body class="loading">
+
+<div class="loader" id="loader">
+  <div class="mark"><span>Brass</span> <span style="color:var(--brass)">&amp;</span> <span>Blade</span></div>
+  <div class="bar"><i id="loadBar"></i></div>
+  <div class="count" id="loadCount">000</div>
+</div>
+
+<header class="header" id="header">
+  <div class="container">
+    <a href="#top" class="logo" aria-label="BRASS &amp; BLADE">
+      <svg viewBox="0 0 32 32" fill="none"><path d="M4 22.5 19.5 7a3.5 3.5 0 0 1 5 5L9 27.5" stroke="currentColor" stroke-width="1.8"/><path d="M4 22.5 9 27.5M14 12.5l5 5" stroke="currentColor" stroke-width="1.8"/><circle cx="22" cy="9.5" r="1.4" fill="currentColor"/></svg>
+      Brass <b>&amp;</b> Blade
+    </a>
+    <nav class="nav">
+      <a href="#about">О нас</a>
+      <a href="#services">Услуги</a>
+      <a href="#works">Работы</a>
+      <a href="#masters">Барберы</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <div style="display:flex;gap:12px;align-items:center">
+      <a href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" class="btn btn-brass">Записаться <span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.6"/></svg></span></a>
+      <button class="burger" id="burger" aria-label="Меню"><svg width="18" height="12" viewBox="0 0 18 12"><path d="M0 1h18M0 11h18" stroke="currentColor" stroke-width="1.6"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<div class="m-menu" id="mMenu">
+  <button class="m-close" id="mClose" aria-label="Закрыть">×</button>
+  <a href="#about">О нас</a>
+  <a href="#services">Услуги</a>
+  <a href="#works">Работы</a>
+  <a href="#masters">Барберы</a>
+  <a href="#contacts">Контакты</a>
+  <a href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" style="color:var(--brass)">Записаться →</a>
+</div>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-media">
+      <video autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1600&q=70">
+        <source src="https://videos.pexels.com/video-files/5450149/5450149-hd_1920_1080_30fps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="scroll-cue">Листайте <i></i></div>
+    <div class="container hero-content">
+      <span class="eyebrow h-fade">Барбершоп · Ташкент · с 2018</span>
+      <h1 id="heroTitle" style="margin-top:22px">
+        <span class="ln"><span>Острые</span></span>
+        <span class="ln"><span>линии.</span> <span><em>Твой стиль.</em></span></span>
+      </h1>
+      <div class="hero-row">
+        <p class="lead h-fade">Мужские стрижки, фейды, борода и королевское бритьё опасной бритвой. Кофе или виски — за наш счёт.</p>
+        <div style="display:flex;flex-direction:column;gap:22px;align-items:flex-start">
+          <div class="hero-meta h-fade">
+            <div><b>4.9 ★</b>380 отзывов</div>
+            <div><b>10—22</b>без выходных</div>
+          </div>
+          <a href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" class="btn btn-brass h-fade">Записаться онлайн <span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.6"/></svg></span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="mq" aria-hidden="true">
+    <div class="mq-track" data-dir="-1"><span>Стрижки <span class="star">✦</span> Фейды <span class="star">✦</span> Борода <span class="star">✦</span> Бритьё <span class="star">✦</span> Укладка <span class="star">✦</span>&nbsp;</span><span>Стрижки <span class="star">✦</span> Фейды <span class="star">✦</span> Борода <span class="star">✦</span> Бритьё <span class="star">✦</span> Укладка <span class="star">✦</span>&nbsp;</span></div>
+    <div class="mq-track outline" data-dir="1"><span>Brass &amp; Blade <span class="star">✦</span> Since 2018 <span class="star">✦</span> Tashkent <span class="star">✦</span>&nbsp;</span><span>Brass &amp; Blade <span class="star">✦</span> Since 2018 <span class="star">✦</span> Tashkent <span class="star">✦</span>&nbsp;</span></div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="about">
+        <div>
+          <span class="eyebrow up">О нас</span>
+          <p class="about-text" id="aboutText">Мы не делаем «как обычно». Каждая стрижка начинается с разговора: о форме головы, о твоём ритме жизни, о том, сколько времени ты готов тратить на укладку. А дальше — <em>точность, горячее полотенце и результат,</em> который держится неделями.</p>
+        </div>
+        <div class="about-imgs">
+          <div class="im a1 reveal"><img data-speed src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=1100&q=75" alt="Интерьер барбершопа"></div>
+          <div class="im a2 reveal"><img data-speed src="https://images.unsplash.com/photo-1621645582931-d1d3e6564943?auto=format&fit=crop&w=800&q=75" alt="Барберское кресло"></div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat up"><div class="n"><span class="count" data-to="8">0</span></div><p>лет в Ташкенте</p></div>
+        <div class="stat up"><div class="n"><span class="count" data-to="27000">0</span><sup>+</sup></div><p>стрижек сделано</p></div>
+        <div class="stat up"><div class="n"><span class="count" data-to="6">0</span></div><p>барберов в команде</p></div>
+        <div class="stat up"><div class="n"><span class="count" data-to="92">0</span><sup>%</sup></div><p>гостей возвращаются</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="services" style="padding-top:0">
+    <div class="container">
+      <div class="svc-head">
+        <div>
+          <span class="eyebrow up">Услуги и цены</span>
+          <h2 class="h2 up" style="margin-top:22px">Прайс <em>без сюрпризов</em></h2>
+        </div>
+        <p class="lead up">В каждую услугу входят мытьё головы, горячее полотенце и укладка. Цена фиксированная — какой бы ни был барбер.</p>
+      </div>
+      <div class="svc-list" id="svcList">
+        <a class="svc up" href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" data-img="1647140655214-e4a2d914971f"><span class="no">01</span><img class="thumb" alt=""><h3>Мужская стрижка<small>Ножницы и машинка, консультация по форме</small></h3><span class="dur">60 мин</span><span class="pr">150 000 сум</span></a>
+        <a class="svc up" href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" data-img="1589985494639-69e60c82cab2"><span class="no">02</span><img class="thumb" alt=""><h3>Фейд / андеркат<small>Плавный переход от нуля, чёткий контур</small></h3><span class="dur">50 мин</span><span class="pr">130 000 сум</span></a>
+        <a class="svc up" href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" data-img="1599011176306-4a96f1516d4d"><span class="no">03</span><img class="thumb" alt=""><h3>Моделирование бороды<small>Форма, контур бритвой, масло и бальзам</small></h3><span class="dur">40 мин</span><span class="pr">100 000 сум</span></a>
+        <a class="svc up" href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" data-img="1503951914875-452162b0f3f1"><span class="no">04</span><img class="thumb" alt=""><h3>Стрижка + борода<small>Полный образ за один визит</small></h3><span class="dur">90 мин</span><span class="pr">220 000 сум</span></a>
+        <a class="svc up" href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" data-img="1596728325488-58c87691e9af"><span class="no">05</span><img class="thumb" alt=""><h3>Королевское бритьё<small>Опасная бритва, горячие полотенца, уход</small></h3><span class="dur">45 мин</span><span class="pr">150 000 сум</span></a>
+        <a class="svc up" href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" data-img="1657105052497-f996284ffff8"><span class="no">06</span><img class="thumb" alt=""><h3>Детская стрижка<small>Для юных джентльменов до 12 лет</small></h3><span class="dur">40 мин</span><span class="pr">100 000 сум</span></a>
+      </div>
+    </div>
+  </section>
+  <div class="svc-preview" id="svcPreview"><img id="svcPreviewImg" alt=""></div>
+
+  <!-- VIDEO REVEAL -->
+  <section class="vr" id="vr">
+    <div class="vr-box" id="vrBox">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="https://videos.pexels.com/video-files/7686519/7686519-hd_1920_1080_24fps.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="vr-text" id="vrText">
+      <h2>Не просто<br><em>стрижка</em></h2>
+      <p>Это час, когда можно выдохнуть: музыка, крепкий кофе и мастер, который знает своё дело.</p>
+    </div>
+  </section>
+
+  <!-- WORKS (horizontal) -->
+  <section class="hs" id="works">
+    <div class="hs-inner">
+      <div class="container hs-head">
+        <div>
+          <span class="eyebrow up">Портфолио</span>
+          <h2 class="h2 up" style="margin-top:22px">Наши <em>работы</em></h2>
+        </div>
+        <p class="lead up">Листайте — это реальные гости, которые стали нашими постоянными клиентами.</p>
+      </div>
+      <div class="hs-track" id="hsTrack">
+        <div class="work"><div class="ph"><img src="https://images.unsplash.com/photo-1630827020718-3433092696e7?auto=format&fit=crop&w=700&q=75" alt="" loading="lazy"></div><div class="cap"><span>Борода + контур</span><span>Тимур</span></div></div>
+        <div class="work wide"><div class="ph"><img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=1000&q=75" alt="" loading="lazy"></div><div class="cap"><span>Дизайн бритвой</span><span>Шерзод</span></div></div>
+        <div class="work"><div class="ph"><img src="https://images.unsplash.com/photo-1599834562135-b6fc90e642ca?auto=format&fit=crop&w=700&q=75" alt="" loading="lazy"></div><div class="cap"><span>Текстурный кроп</span><span>Азамат</span></div></div>
+        <div class="work"><div class="ph"><img src="https://images.unsplash.com/photo-1568339434343-2a640a1a9946?auto=format&fit=crop&w=700&q=75" alt="" loading="lazy"></div><div class="cap"><span>Фейд с рисунком</span><span>Шерзод</span></div></div>
+        <div class="work wide"><div class="ph"><img src="https://images.unsplash.com/photo-1517832606299-7ae9b720a186?auto=format&fit=crop&w=1000&q=75" alt="" loading="lazy"></div><div class="cap"><span>Королевское бритьё</span><span>Рустам</span></div></div>
+        <div class="work"><div class="ph"><img src="https://images.unsplash.com/photo-1618049049816-43a00d5b0c3d?auto=format&fit=crop&w=700&q=75" alt="" loading="lazy"></div><div class="cap"><span>Помпадур</span><span>Азамат</span></div></div>
+        <div class="work"><div class="ph"><img src="https://images.unsplash.com/photo-1629189784191-9afdcbcb0398?auto=format&fit=crop&w=700&q=75" alt="" loading="lazy"></div><div class="cap"><span>Андеркат + борода</span><span>Тимур</span></div></div>
+        <div class="work"><div class="ph"><img src="https://images.unsplash.com/photo-1578390432942-d323db577792?auto=format&fit=crop&w=700&q=75" alt="" loading="lazy"></div><div class="cap"><span>Классический пробор</span><span>Рустам</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MASTERS -->
+  <section class="section" id="masters" style="padding-top:clamp(40px,6vw,80px)">
+    <div class="container">
+      <div class="svc-head" style="margin-bottom:0">
+        <div>
+          <span class="eyebrow up">Команда</span>
+          <h2 class="h2 up" style="margin-top:22px">Наши <em>барберы</em></h2>
+        </div>
+        <p class="lead up">У каждого свой почерк. Выберите мастера при записи — или доверьтесь тому, кто свободен.</p>
+      </div>
+      <div class="masters">
+        <div class="master up"><div class="ph reveal"><img src="https://images.unsplash.com/photo-1553521041-d168abd31de3?auto=format&fit=crop&w=700&q=75" alt="Рустам"><span class="ig">@rustam.blade</span></div><h3>Рустам</h3><p>Основатель · классика и бритьё</p><span class="lvl">Топ-барбер</span></div>
+        <div class="master up"><div class="ph reveal"><img src="https://images.unsplash.com/photo-1598524374912-6b0b0bab43dd?auto=format&fit=crop&w=700&q=75" alt="Азамат"><span class="ig">@azamat.cuts</span></div><h3>Азамат</h3><p>Укладки и текстурные стрижки</p><span class="lvl">Арт-барбер</span></div>
+        <div class="master up"><div class="ph reveal"><img src="https://images.unsplash.com/photo-1585581905588-9e91f63bdd47?auto=format&fit=crop&w=700&q=75" alt="Тимур"><span class="ig">@timur.beard</span></div><h3>Тимур</h3><p>Бороды и мужской грумминг</p><span class="lvl">Топ-барбер</span></div>
+        <div class="master up"><div class="ph reveal"><img src="https://images.unsplash.com/photo-1567894340315-735d7c361db0?auto=format&fit=crop&w=700&q=75" alt="Шерзод"><span class="ig">@sherzod.fade</span></div><h3>Шерзод</h3><p>Фейды и дизайн бритвой</p><span class="lvl">Барбер</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <span class="eyebrow up">Отзывы</span>
+      <h2 class="h2 up" style="margin-top:22px">Говорят <em>гости</em></h2>
+      <div class="reviews">
+        <div class="review up"><div><div class="q">“</div><p>Хожу к Тимуру второй год. Борода впервые выглядит так, будто я за ней реально ухаживаю. Атмосфера — как в клубе.</p></div><div class="who"><b>Бехзод</b><span class="stars">★★★★★</span></div></div>
+        <div class="review up"><div><div class="q">“</div><p>Сделали фейд перед свадьбой брата — все спрашивали, где стригся. Запись через Telegram за минуту, без звонков.</p></div><div class="who"><b>Дмитрий</b><span class="stars">★★★★★</span></div></div>
+        <div class="review up"><div><div class="q">“</div><p>Королевское бритьё — это отдельный вид отдыха. Горячие полотенца, тишина, кофе. Теперь раз в месяц как ритуал.</p></div><div class="who"><b>Жахонгир</b><span class="stars">★★★★★</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOK -->
+  <section class="section" id="book" style="padding-top:0">
+    <div class="container">
+      <div class="book up">
+        <video autoplay muted loop playsinline preload="metadata">
+          <source src="https://videos.pexels.com/video-files/7697533/7697533-hd_1280_720_30fps.mp4" type="video/mp4">
+        </video>
+        <div class="book-in">
+          <span class="eyebrow">Онлайн-запись</span>
+          <h2 class="h2" style="margin-top:22px">Запишись <em>за 30 секунд</em></h2>
+          <p class="lead">Выбери услугу, барбера и время прямо в Telegram. Напомним о визите, а если планы поменяются — отменишь в один клик.</p>
+          <div class="book-actions">
+            <a href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" class="btn btn-brass">Открыть в Telegram <span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.6"/></svg></span></a>
+            <a href="tel:+998712001122" class="btn btn-ghost">+998 71 200-11-22</a>
+          </div>
+          <div class="steps"><span><b>01</b>Услуга</span><span><b>02</b>Барбер</span><span><b>03</b>Время</span><span><b>04</b>Готово</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contacts">
+  <div class="container">
+    <div class="foot">
+      <div>
+        <a href="#top" class="logo" style="margin-bottom:18px"><svg viewBox="0 0 32 32" fill="none"><path d="M4 22.5 19.5 7a3.5 3.5 0 0 1 5 5L9 27.5" stroke="currentColor" stroke-width="1.8"/><path d="M4 22.5 9 27.5M14 12.5l5 5" stroke="currentColor" stroke-width="1.8"/><circle cx="22" cy="9.5" r="1.4" fill="currentColor"/></svg>Brass <b>&amp;</b> Blade</a>
+        <p style="color:var(--muted);max-width:300px">Мужской барбершоп в центре Ташкента. Стрижки, борода и бритьё с 2018 года.</p>
+      </div>
+      <div><h4>Адрес</h4><p>г. Ташкент, Юнусабадский р-н,<br>ул. Амира Темура, 107Б</p><p style="color:var(--muted)">ориентир: м. Юнус Раджаби</p></div>
+      <div><h4>Часы работы</h4><p>Ежедневно 10:00 – 22:00</p><p style="color:var(--muted)">последняя запись в 21:00</p></div>
+      <div><h4>Связь</h4><a href="tel:+998712001122">+998 71 200-11-22</a><a href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener">Telegram</a><a href="#">Instagram</a></div>
+    </div>
+    <div class="foot-big">Brass <b>&amp;</b> Blade</div>
+    <div class="foot-bottom"><span>© 2026 BRASS &amp; BLADE. Демонстрационный сайт.</span><span>Сделано с вниманием к деталям</span></div>
+  </div>
+</footer>
+
+<a href="https://t.me/BarberShop12g_bot" target="_blank" rel="noopener" class="m-cta" id="mCta">Записаться →</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  const hasGsap = window.gsap && window.ScrollTrigger;
+  const loader = document.getElementById('loader');
+
+  /* ---------- smooth scroll ---------- */
+  let lenis = null;
+  if (window.Lenis) {
+    lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+    if (hasGsap) {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(t => lenis.raf(t * 1000));
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+    }
+    lenis.stop();
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    const el = id === '#top' ? document.body : document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    closeMenu();
+    lenis ? lenis.scrollTo(el, { offset: id === '#top' ? 0 : -60, duration: 1.6 }) : el.scrollIntoView({ behavior: 'smooth' });
+  }));
+
+  /* ---------- header, mobile CTA, menu ---------- */
+  const header = document.getElementById('header');
+  const mCta = document.getElementById('mCta');
+  let lastY = 0;
+  const onScroll = () => {
+    const y = window.scrollY;
+    header.classList.toggle('scrolled', y > 40);
+    header.classList.toggle('hidden', y > 500 && y > lastY);
+    mCta.classList.toggle('show', y > innerHeight * .8);
+    lastY = y;
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  const menu = document.getElementById('mMenu');
+  function closeMenu() { menu.classList.remove('open'); lenis && lenis.start(); }
+  document.getElementById('burger').onclick = () => { menu.classList.add('open'); lenis && lenis.stop(); };
+  document.getElementById('mClose').onclick = closeMenu;
+  menu.querySelectorAll('a[target]').forEach(a => a.addEventListener('click', closeMenu));
+
+  /* ---------- service thumbs (mobile) ---------- */
+  const IMG = (id, w, h) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&h=${h}&q=75`;
+  document.querySelectorAll('.svc').forEach(s => { s.querySelector('.thumb').src = IMG(s.dataset.img, 160, 160); });
+
+  /* ---------- about text: split into words ---------- */
+  const about = document.getElementById('aboutText');
+  const wrapWords = node => {
+    [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) frag.appendChild(document.createTextNode(part));
+          else { const s = document.createElement('span'); s.className = 'w'; s.textContent = part; frag.appendChild(s); }
+        });
+        n.replaceWith(frag);
+      } else wrapWords(n);
+    });
+  };
+  wrapWords(about);
+
+  if (!hasGsap) {
+    loader.remove();
+    document.body.classList.remove('loading');
+    lenis && lenis.start();
+    document.querySelectorAll('.about-text .w').forEach(w => w.style.opacity = 1);
+    document.querySelectorAll('.count').forEach(c => c.textContent = (+c.dataset.to).toLocaleString('ru-RU'));
+    return;
+  }
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- intro: loader -> hero ---------- */
+  gsap.set('#heroTitle .ln > span', { yPercent: 110 });
+  gsap.set('.h-fade', { y: 24, opacity: 0 });
+  gsap.set('.hero-media video', { scale: 1.25 });
+  const counter = { v: 0 };
+  const intro = gsap.timeline();
+  intro
+    .from('.loader .mark span', { yPercent: 110, duration: .7, stagger: .08, ease: 'power3.out' })
+    .to(counter, { v: 100, duration: 1.1, ease: 'power2.inOut', onUpdate: () => document.getElementById('loadCount').textContent = String(Math.round(counter.v)).padStart(3, '0') }, 0)
+    .to('#loadBar', { scaleX: 1, duration: 1.1, ease: 'power2.inOut' }, 0)
+    .to(loader, { yPercent: -100, duration: .9, ease: 'expo.inOut', onComplete: () => { loader.remove(); document.body.classList.remove('loading'); lenis && lenis.start(); } })
+    .to('.hero-media video', { scale: 1, duration: 1.8, ease: 'expo.out' }, '-=.55')
+    .to('#heroTitle .ln > span', { yPercent: 0, duration: 1.1, stagger: .1, ease: 'power4.out' }, '-=1.5')
+    .to('.h-fade', { y: 0, opacity: 1, duration: .9, stagger: .08, ease: 'power3.out' }, '-=.8');
+
+  // hero parallax on scroll: video drifts, title lifts and fades
+  gsap.to('.hero-media', { yPercent: 18, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.hero-content', { yPercent: -25, opacity: 0, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom 20%', scrub: true } });
+
+  /* ---------- marquee reacting to scroll speed ---------- */
+  const mqTweens = gsap.utils.toArray('.mq-track').map(tr => {
+    const dir = +tr.dataset.dir;
+    return gsap.fromTo(tr, { xPercent: dir < 0 ? 0 : -50 }, { xPercent: dir < 0 ? -50 : 0, duration: 38, ease: 'none', repeat: -1 });
+  });
+  let boost = 0;
+  lenis && lenis.on('scroll', e => { boost = gsap.utils.clamp(-6, 6, e.velocity / 6); });
+  gsap.ticker.add(() => {
+    boost *= .92;
+    const speed = 1 + Math.abs(boost);
+    const sign = boost < -0.2 ? -1 : 1;
+    mqTweens.forEach(t => t.timeScale(speed * sign));
+  });
+
+  /* ---------- generic fade-up ---------- */
+  gsap.set('.up', { y: 50, opacity: 0 });
+  ScrollTrigger.batch('.up', {
+    start: 'top 88%', once: true,
+    onEnter: els => gsap.to(els, { y: 0, opacity: 1, duration: 1.1, stagger: .09, ease: 'power3.out', overwrite: true })
+  });
+
+  /* ---------- about: words light up while scrolling ---------- */
+  gsap.to('.about-text .w', {
+    opacity: 1, stagger: .05, ease: 'none',
+    scrollTrigger: { trigger: about, start: 'top 80%', end: 'bottom 45%', scrub: true }
+  });
+
+  /* ---------- image reveal + parallax ---------- */
+  gsap.utils.toArray('.reveal').forEach(box => {
+    const img = box.querySelector('img');
+    gsap.timeline({ scrollTrigger: { trigger: box, start: 'top 85%', once: true } })
+      .fromTo(box, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.inOut' })
+      .fromTo(img, { scale: 1.4 }, { scale: 1, duration: 1.8, ease: 'expo.out' }, .2);
+  });
+  gsap.utils.toArray('[data-speed]').forEach(img => {
+    gsap.fromTo(img, { yPercent: -7 }, { yPercent: 7, ease: 'none', scrollTrigger: { trigger: img.parentElement, scrub: true } });
+  });
+
+  /* ---------- counters ---------- */
+  gsap.utils.toArray('.count').forEach(c => {
+    const o = { v: 0 };
+    gsap.to(o, { v: +c.dataset.to, duration: 2.2, ease: 'power2.out',
+      scrollTrigger: { trigger: c, start: 'top 90%', once: true },
+      onUpdate: () => c.textContent = Math.round(o.v).toLocaleString('ru-RU') });
+  });
+
+  /* ---------- services: floating photo follows the cursor ---------- */
+  const preview = document.getElementById('svcPreview');
+  const pImg = document.getElementById('svcPreviewImg');
+  if (matchMedia('(hover: hover) and (min-width: 1025px)').matches) {
+    const xTo = gsap.quickTo(preview, 'x', { duration: .6, ease: 'power3' });
+    const yTo = gsap.quickTo(preview, 'y', { duration: .6, ease: 'power3' });
+    document.querySelectorAll('.svc').forEach(s => {
+      new Image().src = IMG(s.dataset.img, 600, 760);
+      s.addEventListener('mouseenter', () => {
+        pImg.src = IMG(s.dataset.img, 600, 760);
+        gsap.to(preview, { autoAlpha: 1, scale: 1, rotate: 0, duration: .5, ease: 'power3.out' });
+      });
+      s.addEventListener('mouseleave', () => gsap.to(preview, { autoAlpha: 0, scale: .6, rotate: -6, duration: .4, ease: 'power3.in' }));
+    });
+    addEventListener('mousemove', e => { xTo(e.clientX + 170); yTo(e.clientY); });
+  }
+
+  /* ---------- video window opens to full screen ---------- */
+  gsap.timeline({ scrollTrigger: { trigger: '#vr', start: 'top top', end: '+=120%', scrub: 1, pin: true } })
+    .to('#vrBox', { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none' })
+    .to('#vrBox video', { scale: 1, ease: 'none' }, 0)
+    .from('#vrText h2', { y: 80, opacity: 0, ease: 'none', duration: .5 }, .25)
+    .from('#vrText p', { y: 40, opacity: 0, ease: 'none', duration: .4 }, .45);
+
+  /* ---------- works: horizontal scroll (desktop) ---------- */
+  const mm = gsap.matchMedia();
+  mm.add('(min-width: 641px)', () => {
+    const track = document.getElementById('hsTrack');
+    const dist = () => track.scrollWidth - innerWidth;
+    gsap.to(track, {
+      x: () => -dist(), ease: 'none',
+      scrollTrigger: { trigger: '#works', start: 'top top', end: () => '+=' + dist(), scrub: 1, pin: true, invalidateOnRefresh: true }
+    });
+  });
+
+  /* ---------- footer wordmark ---------- */
+  gsap.from('.foot-big', { yPercent: 40, opacity: 0, ease: 'none', scrollTrigger: { trigger: 'footer', start: 'top bottom', end: 'bottom bottom', scrub: true } });
+
+  addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+</body>
+</html>
